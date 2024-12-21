@@ -11,7 +11,7 @@ toc:
   sidebar: left
 ---
 
-### Creating an environment
+### 1. TorchRL Environment
 - TorchRL은 직접적으로 환경을 제공하지 않고, 대신 다른 환경 시뮬레이터 라이브러리들을 위한 wrapper 제공 
 - `torchrl.envs` 모듈의 역할 
   - 일반적인 환경 API를 제공
@@ -132,11 +132,136 @@ print(env.available_envs)
 #  'tabular/CliffWalking-v0']
 ```
 
-### 차이점 요약
+#### GymEnv vs. GymWrapper 차이점 요약
 
 | **항목** | **GymEnv** | **GymWrapper** |
 | **사용 목적** | **Gym** 환경을 **TorchRL**의 표준 API로 변환 | 이미 생성된 환경에 추가적인 기능을 부여하거나 변환  |
 | **적용 대상** | 기존 **Gym** 환경 | **GymEnv** 또는 유사한 환경 |
 | **사용 시점** | 환경 초기 생성 단계 | 환경 생성 후 추가 변환이나 전처리가 필요할 때 |
 | **주요 작업** | **reset**, **step**, **render**와 같은 기본 작업 제공 | 관측값 변환, 동작 공간 변경, 환경 속성 추가 |
-{:.mbtablestyle}
+{:.mbtablestyle .table .table-striped}
+
+### 2. TorchRL Environment 활용 기본
+
+- TorchRL에서 Environment은 두 가지 중요한 메서드를 제공함
+    - reset(): 에피소드를 초기화하는 메서드로, 새로운 시작 상태 반환
+	- step(action): 배우(Actor)가 선택한 행동(Action)을 실행하는 메서드로, 다음 상태, 보상, 완료 여부 등의 결과 반환
+
+- 이 두 메서드는 TensorDict라는 데이터 구조를 읽고 쓰는 방식으로 동작함
+    - TensorDict란
+	    - TensorDict는 텐서를 키 기반으로 관리할 수 있는 범용적인 데이터 저장 구조
+	    - 단순한 텐서(Plain Tensor)를 사용하는 대신 TensorDict를 사용하면 간단한 데이터와 복잡한 데이터 구조를 동일하게 다룰 수 있음
+	    - 매우 범용적으로 설계되어 있어, 다양한 데이터 형식을 처리하는 어려움을 제거해 줌
+
+- TorchRL의 환경은 사용자 친화적이고 통합된 데이터 관리 방식을 제공하는 Tensordict 구조로 설계되어 있음
+- Tensordict를 적극적으로 활용함으로써 복잡성을 줄이면서 다양한 환경에서 효율적으로 작업할 수 있도록 함
+- Tensordict 데이터 형식: TED (TorchRL Episode Data format)
+  - TorchRL에서 데이터를 표현하는 통일된 방식
+```python
+reset = env.reset()
+print(reset)
+# TensorDict(
+#     fields={
+#         done: Tensor(shape=torch.Size([1]), device=cpu, dtype=torch.bool, is_shared=False),
+#         observation: Tensor(shape=torch.Size([3]), device=cpu, dtype=torch.float32, is_shared=False),
+#         terminated: Tensor(shape=torch.Size([1]), device=cpu, dtype=torch.bool, is_shared=False),
+#         truncated: Tensor(shape=torch.Size([1]), device=cpu, dtype=torch.bool, is_shared=False)},
+#     batch_size=torch.Size([]),
+#     device=None,
+#     is_shared=False
+# )
+```
+- Tensordict 내 각 필드 설명 
+    - fields
+	    - done: 에피소드 종료 여부(Boolean)
+	    - observation: 환경의 관측값
+	    - terminated: 정상 종료 여부(Boolean)
+	    - truncated: 시간 제한 등으로 인한 중단 여부(Boolean)
+    - batch_size
+	    - 여러 에피소드를 동시에 실행하는 경우에는 batch_size가 에피소드 수를 나타내는 크기로 설정
+	    - torch.Size([]): 단일 에피소드 실행을 의미
+	- device
+	    - None: 텐서가 저장된 장치 미지정
+	    - 기본적으로 CPU 사용
+	- is_shared
+	    - False: 다중 프로세스 간 데이터 공유되지 않음
+	    - 필요 시 True로 설정 가능
+
+- 이제 action space에서 랜덤한 행동을 수행
+```python
+reset_with_action = env.rand_action(reset)
+print(reset_with_action)
+# TensorDict(
+#     fields={
+#         action: Tensor(shape=torch.Size([1]), device=cpu, dtype=torch.float32, is_shared=False),
+#         done: Tensor(shape=torch.Size([1]), device=cpu, dtype=torch.bool, is_shared=False),
+#         observation: Tensor(shape=torch.Size([3]), device=cpu, dtype=torch.float32, is_shared=False),
+#         terminated: Tensor(shape=torch.Size([1]), device=cpu, dtype=torch.bool, is_shared=False),
+#         truncated: Tensor(shape=torch.Size([1]), device=cpu, dtype=torch.bool, is_shared=False)},
+#     batch_size=torch.Size([]),
+#     device=None,
+#     is_shared=False
+# )
+```
+- Tensordict 내 각 필드 설명 
+    - fields
+	    - action: 수행한 행동(action) 정보
+- 일반적인 딕셔너리(dictionary)를 사용하는 것처럼 쉽게 행동(action)에 접근할 수 있음
+```python
+print(reset_with_action["action"])
+# tensor([1.5947])
+```
+
+- 이제 이 action을 환경에 전달할 수 있음
+```python
+stepped_data = env.step(reset_with_action)
+print(stepped_data)
+# TensorDict(
+#     fields={
+#         action: Tensor(shape=torch.Size([1]), device=cpu, dtype=torch.float32, is_shared=False),
+#         done: Tensor(shape=torch.Size([1]), device=cpu, dtype=torch.bool, is_shared=False),
+#         next: TensorDict(
+#             fields={
+#                 done: Tensor(shape=torch.Size([1]), device=cpu, dtype=torch.bool, is_shared=False),
+#                 observation: Tensor(shape=torch.Size([3]), device=cpu, dtype=torch.float32, is_shared=False),
+#                 reward: Tensor(shape=torch.Size([1]), device=cpu, dtype=torch.float32, is_shared=False),
+#                 terminated: Tensor(shape=torch.Size([1]), device=cpu, dtype=torch.bool, is_shared=False),
+#                 truncated: Tensor(shape=torch.Size([1]), device=cpu, dtype=torch.bool, is_shared=False)},
+#             batch_size=torch.Size([]),
+#             device=None,
+#             is_shared=False),
+#         observation: Tensor(shape=torch.Size([3]), device=cpu, dtype=torch.float32, is_shared=False),
+#         terminated: Tensor(shape=torch.Size([1]), device=cpu, dtype=torch.bool, is_shared=False),
+#         truncated: Tensor(shape=torch.Size([1]), device=cpu, dtype=torch.bool, is_shared=False)},
+#     batch_size=torch.Size([]),
+#     device=None,
+#     is_shared=False
+# )
+```
+- 새로운 TensorDict의 특징
+    - 이전 TensorDict와 동일하지만 **"next"** 항목이 추가됨
+    - **"next"** 항목은 관측값(observation), 보상(reward), 종료 상태(done state)를 포함하는 TensorDict
+
+- "next" 항목을 다음 단계로 연결하는 방법
+    - 다음 단계 수행을 위해 **"next"** 항목만 가져와 활용할 수 있음
+    - 이를 위해 TorchRL은 **step_mdp()** 함수를 제공  
+        - 즉, MDP (Markov Decision Proces)의 한 단계 수행 이후 관측값에 해당하는 데이터 구조 반환
+        
+```python
+from torchrl.envs import step_mdp
+
+data = step_mdp(stepped_data)
+print(data)
+# TensorDict(
+#     fields={
+#         done: Tensor(shape=torch.Size([1]), device=cpu, dtype=torch.bool, is_shared=False),
+#         observation: Tensor(shape=torch.Size([3]), device=cpu, dtype=torch.float32, is_shared=False),
+#         terminated: Tensor(shape=torch.Size([1]), device=cpu, dtype=torch.bool, is_shared=False),
+#         truncated: Tensor(shape=torch.Size([1]), device=cpu, dtype=torch.bool, is_shared=False)},
+#     batch_size=torch.Size([]),
+#     device=None,
+#     is_shared=False
+# )
+```
+
+### 3. TorchRL Environment rollouts
