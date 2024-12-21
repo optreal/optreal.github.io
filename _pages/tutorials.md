@@ -44,27 +44,26 @@ horizontal: false
 
 {% else %}
 
-<!-- Display tutorials without categories -->
-
-{% assign sorted_tutorials = site.tutorials | sort: "importance" %}
+  <!-- Display tutorials without categories -->
+  {% assign sorted_tutorials = site.tutorials | sort: "importance" %}
 
   <!-- Generate cards for each tutorial -->
 
-{% if page.horizontal %}
-
-  <div class="container">
-    <div class="row row-cols-1 row-cols-md-2">
-    {% for tutorial in sorted_tutorials %}
-      {% include tutorials_horizontal.liquid %}
-    {% endfor %}
+  {% if page.horizontal %}
+    <div class="container">
+      <div class="row row-cols-1 row-cols-md-2">
+      {% for tutorial in sorted_tutorials %}
+        {% include tutorials_horizontal.liquid %}
+      {% endfor %}
+      </div>
     </div>
-  </div>
   {% else %}
-  <div class="row row-cols-1 row-cols-md-3">
-    {% for tutorial in sorted_tutorials %}
-      {% include tutorials.liquid %}
-    {% endfor %}
-  </div>
+    <div class="row row-cols-1 row-cols-md-3">
+      {% for tutorial in sorted_tutorials %}
+        {% include tutorials.liquid %}
+      {% endfor %}
+    </div>
   {% endif %}
+  
 {% endif %}
 </div>

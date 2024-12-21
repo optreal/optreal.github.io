@@ -1,8 +1,8 @@
 ---
 layout: page
-title: TorchRL
+title: TorchRL Environment
 date: 2024-12-21 15:00:00+0900
-description: Pytorch TorchRL
+description: Pytorch TorchRL Environment
 img: assets/img/12.jpg
 importance: 1
 category: reinforcement learning
