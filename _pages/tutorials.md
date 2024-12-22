@@ -5,7 +5,7 @@ permalink: /tutorials/
 description: A growing collection of tutorials.
 nav: true
 nav_order: 2
-display_categories: [reinforcement learning, fun]
+display_categories: [TorchRL, RL]
 horizontal: false
 ---
 <style>
@@ -64,6 +64,6 @@ horizontal: false
       {% endfor %}
     </div>
   {% endif %}
-  
+
 {% endif %}
 </div>
