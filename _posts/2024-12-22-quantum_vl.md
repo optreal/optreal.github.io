@@ -21,55 +21,68 @@ toc:
 - Reference: {% cite a10207249 %}
 
 
-{% include figure.liquid loading="eager" path="assets/img/blogs/2024-12-22-quantum_vl/link.jpg" class="img-fluid rounded z-depth-1" zoomable=true %}
+### Introduction
+
+## 양자 네트워크와 양자 얽힘 관리: 주요 내용 정리
+
+### 1. **양자 인터넷의 등장**
+- 최근 **양자 물리학 원리(quantum physics principles)**가 컴퓨터 네트워크에 적용되며 연구와 산업 분야에서 주목받고 있음.
+- **IETF(Internet Engineering Task Force)**가 제안한 **양자 인터넷(Quantum Internet)**의 표준화 시도가 이를 증명.
+- **양자 얽힘(quantum entanglement)**은 양자 통신(Quantum Communication)을 위한 기본 자원으로 확인됨.
+  - 이를 통해 **양자 암호 키 분배(quantum key distribution)**와 **분산 양자 컴퓨팅(distributed quantum computing)**과 같은 응용 가능.
 
 ---
 
-### Introduction
+### 2. **양자 얽힘의 특성과 문제**
+- 양자 얽힘은 **확률적 과정(probabilistic process)**으로, 관련 통신 장치(광섬유(optical fiber), 레이저(laser), 양자 메모리(quantum memory) 등)의 특성에 크게 의존.
+- 얽힘 관리는 **확률 제어 문제(stochastic control problem)**로, **마르코프 결정 과정(Markov Decision Process, MDP)**으로 공식화 가능.
+- 본 연구에서는 두 원격 통신 노드(remote communication nodes) 간의 얽힘을 설정할 때 **심층 강화 학습(Deep Reinforcement Learning, DRL)**의 적용 가능성을 조사.
 
-In the last years, the application of quantum physics principles to computer networks is gaining momentum among the research and industry communities, as shown by the first attempts of standardisation of a so-called “Quantum Internet” {% cite rfc9340 %}, {% cite rfc9583 %} by the Internet Engineering Task Force (IETF).
+---
 
-Amongst these principle the quantum entanglement has been identified as fundamental resource for Quantum Communication {% cite rfc9340 %}, since it enables the Quantum Internet applications, as secure cryptographic key distribution and, distributed quantum computing {% cite rfc9583 %}.
+### 3. **양자 비트(Qubit)와 얽힘(Entanglement)**
+- **양자 비트(Qubit)**는 고전 비트(classical bit)의 양자적 대응물.
+  - 고전 비트는 “0” 또는 “1”의 상태만 가지지만, 양자 비트는 두 상태의 **중첩(superposition)** 상태를 가짐.
+  - 측정 후 확률에 따라 “0” 또는 “1” 상태로 결정됨.
+- **얽힘(Entanglement)**:
+  - 두 양자 비트가 얽히면 각 상태를 독립적으로 설명할 수 없음.
+  - 한 쪽 비트 상태가 변하면, 물리적 거리에 관계없이 다른 비트의 상태도 함께 변화.
+  - 얽힘은 양자 암호와 분산 양자 컴퓨팅 같은 비고전적(non-classical) 응용의 핵심 요소.
 
-But, quantum entanglement is a probabilistic process strongly dependent on the features of the
-involved communication devices. Consequently, the entanglement management constitutes a stochastic control
-problem that can be formulated as a Markov Decision Process (MDP) [3]. In this preliminary work, we investigate
-the capacity of Deep Reinforcement Learning (DRL) to solve these problems, in particular, when a quantum
-entanglement is set up between two remote communication nodes not directly connected by a link. In the
-paragraphs below, we will introduce the required background.
+---
 
-Qubit and entanglement. In quantum communication and quantum computing, the counterpart of a classical
-bit is the quantum bit (or qubit). But, whereas the classic bit can take either the “0” state or the “1” state,
-the qubit can be in a superposition of the two, with a certain probability to be at one of the states. The qubit
-exists in this superposition until its eventual measurement. Afterwards, it will take the “0” value or “1” value
-according to the corresponding probability. When two qubits are entangled, their individual states cannot be
-described in a separated way: a state change, i.e., a qubit reading measurement, in one of them implicitly comes
-with a change in the other one, regardless of the physical distance between them. Thus, the measurements at
-the two entangled qubits exhibit non-classical correlations used to design new applications not possible with
-classical communication, such us quantum key distribution or distributed quantum computation.
-Quantum network. A set of nodes able to exchange qubits and distribute entangled states amongst themselves
-is defined as a quantum network in the RFC [1]. These quantum nodes are connected each other by optical
-fiber or satellite laser links. In this paper, we assume fiber links. When, an entanglement is set up between
-two qubits located at two adjacent quantum nodes connected by a direct link (e.g., between nodes A and B in
-Fig. 1), the entanglement constitues an elementary quantum link [1]. Its success probability Pe exponentially
-decreases with distance, which means that short-distance entanglements (like A-B, in Fig. 1) are more likely to
-succeed than long-distance entanglements (like A-C, in Fig. 1). To overcome this issue, we can create a virtual
-link [1] over two elementary links via the so-called entanglement swapping [1], [4]. This process allows creating
-long-distance entangled pairs by consuming the previously generated elementary links on the path between two
-further end-points. In Fig. 1, the elementary links A-B and B-C are consumed to create a longer virtual link
-A-C. Quantum nodes (as B in Fig. 1) that create long-distance entangled pairs via entanglement swapping
-are called quantum repeaters [1] and they must store intermediate elementary links on the so-called quantum
-memories [1] to be consumed later.
-Quantum memory lifetimes. The probability that a qubit stored in a quantum memory is still, after a certain
-time, in its original state (e.g., an entangled state) decreases with time [5]. This probability is referred as to
-memory efficiency ηm [5], and its decay is known as decoherence. This process is the consequence of the
-progressive interactions of the quantum memory with the environment, since a memory cannot be perfectly
-isolated from it. The entanglement swapping success probability Ps depends on the memory efficiency ηm of
-the oldest loaded quantum memory involved in the swapping [6].
-This paper, as far as we know, is one of the first works modelling a quantum virtual link generation process
-as a classical MDP and using a DRL algorithm to find an optimal generation policy tracking the age of the
-elementary links. This supposes an innovative contribution with respect to the related works, where this age of
-the elementary are not used in the generation procedures.
-Related works are presented in Section 2. The MDP modelling the virtual link generation along with the DRL
-approach used to solve it are described in Section 3. Numerical results and experiment settings are shown in
-Section 4. Section 5 concludes the article.
+### 4. **양자 네트워크(Quantum Network)**
+- 양자 네트워크는 얽힘 상태를 분배하고 **양자 비트(Qubit)**를 교환할 수 있는 노드(node)들로 구성.
+  - 노드들은 **광섬유(optical fiber)** 또는 **위성 레이저 링크(satellite laser link)**로 연결.
+- 얽힘 상태 설정:
+  - 두 인접 노드에 위치한 양자 비트 간 얽힘은 **기본 양자 링크(elementary quantum link)**를 구성.
+  - 성공 확률(**Pe**)은 거리 증가에 따라 지수적으로 감소.
+- **가상 링크(Virtual Link)** 생성:
+  - 얽힘 교환(Entanglement Swapping)을 통해 두 기본 링크를 결합.
+  - 예) 기본 링크 A-B와 B-C를 소비하여 A-C라는 장거리 가상 링크 생성.
+  - 얽힘 교환을 수행하는 중간 노드는 **양자 리피터(Quantum Repeater)**로, 중간 링크를 **양자 메모리(Quantum Memory)**에 저장 후 사용.
+
+---
+
+### 5. **양자 메모리 수명(Quantum Memory Lifetimes)**
+- 양자 메모리에 저장된 얽힘 상태가 원래 상태를 유지할 확률(**메모리 효율(memory efficiency), ηm**)은 시간이 지남에 따라 감소.
+  - 이 과정은 **데코히어런스(Decoherence)**로 알려짐.
+  - 얽힘 교환 성공 확률(**Ps**)은 가장 오래된 양자 메모리의 메모리 효율 ηm에 의존.
+
+---
+
+### 6. **본 연구의 기여**
+- 양자 가상 링크 생성 과정을 **고전적 MDP(Classical MDP)**로 모델링하고, DRL 알고리즘을 사용하여 최적의 생성 정책(policy)을 도출.
+- 본 연구는 기본 링크의 **나이(age)**를 추적하는 새로운 방법을 제안:
+  - 기존 연구에서는 링크 생성 성공 시점의 타임스탬프를 고려하지 않음.
+
+---
+
+### 7. **논문 구조**
+- **Section 2**: 관련 연구(related works) 소개.
+- **Section 3**: 가상 링크 생성의 MDP 모델링 및 DRL 접근법 설명.
+- **Section 4**: 수치 결과(numerical results) 및 실험 설정.
+- **Section 5**: 결론(conclusion) 제시.
+
+
+{% include figure.liquid loading="eager" path="assets/img/blogs/2024-12-22-quantum_vl/link.jpg" class="img-fluid rounded z-depth-1" zoomable=true %}
