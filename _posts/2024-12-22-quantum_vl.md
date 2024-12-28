@@ -115,10 +115,13 @@ toc:
 - 기존 연구는 링크 생성의 **히스토리(타임스탬프)**를 무시
 - 즉, 가상 링크 생성 시 무한 메모리 컷오프 시간 정책(infinity memory cutoff-time policy)을 따름
   - 초기 링크가 성공적으로 얽힌 이후 다음 링크가 성공적으로 얽힐 때까지 초기 링크는 원래 상태를 지속적으로 유지할 확률을 100% 로 설정
-  - 오래된 링크의 더 큰 `디코히어런스(decoherence)`가 `얽힘 교환` 성공 확률($$P_s$$)에 미치는 영향을 고려하지 않음
+  - 오래된 링크의 더 큰 `열화(decoherence)`가 `얽힘 교환` 성공 확률($$P_s$$)에 미치는 영향을 고려하지 않음
+- `열화(decoherence)`
+  - 큐비트 상태가 시간이 지남에 따라 점진적으로 손실되는 과정
+  - 원인: 양자 메모리가 환경과 상호작용하면서 완벽히 고립될 수 없기 때문
 
 ### 5. 이 논문의 개선점
-- 기존 접근법의 단점을 보완하여, 히스토리와 `디코히어런스` 영향을 포함한 MDP 모델링을 제안.
+- 기존 접근법의 단점을 보완하여, 히스토리와 `열화(decoherence)` 영향을 포함한 MDP 모델링을 제안.
 
 ---
 
@@ -132,7 +135,7 @@ toc:
 - **컷오프 시간(**$$t_c$$**)**
   - <u>얽힘 상태를 유지하다가 폐기하는 시점을 결정하는 시간 임계값</u>
   - 얽힘 품질 관리
-    - 얽힘 상태는 시간이 지남에 따라 `디코히어런스` 현상으로 인해 점차 품질이 저하됨
+    - 얽힘 상태는 시간이 지남에 따라 `열화(decoherence)` 현상으로 인해 점차 품질이 저하됨
     - 품질이 낮아지면 `얽힘 교환`의 성공 확률이 감소하므로, 특정 시간 이후 품질 저하된 얽힘 상태를 폐기하는 것이 유리함
   - 리소스 최적화
     - 얽힘 상태를 오래 유지하면 성공 확률은 감소하지만, 새로 생성하지 않으므로 리소스를 절약할 수 있음
@@ -144,7 +147,7 @@ toc:
 | **짧은 컷오프 시간** | **긴 컷오프 시간** |
 | 얽힘 상태를 빠르게 폐기하고 새로 생성함 | 얽힘 상태를 오래 유지하며 새로운 생성 빈도를 줄임 |
 | `얽힘 교환` 성공 확률은 높아질 수 있지만, 새로운 링크 생성의 반복으로 인해 전체 과정이 지연될 가능성이 높아짐 | 리소스를 절약하며 빠르게 교환 시도를 진행할 수 있지만, `얽힘 교환`의 성공 확률은 낮아질 수 있음 |
-| 리소스 소모 증가 | `디코히어런스` 영향이 크다면 교환 실패 가능성이 높아짐 |
+| 리소스 소모 증가 | `열화(decoherence)` 영향이 크다면 교환 실패 가능성이 높아짐 |
 {:.mbtablestyle .table .table-striped}
 
 - 컷오프 시간 결정의 어려움
@@ -220,12 +223,50 @@ toc:
 
 - 기본 링크 얽힘 성공 확률 $$P_e$$
   - 광섬유 거리 $$L_0$$에 따라 지수적으로 감소
-    - {% cite sangouard2009 %}에서 제시된 결과에 기반함
+    - {% cite sangouard2009 %}, {% cite 8269080 %} 또는 {%cite Uphoff_2016 %}에 제시된 결과에 기반함
+
+> Entanglement Generation Probability Model
+
+> Once a heralded local entanglement is generated at each node, the two photons must be sent to the BSM and must be measured The entanglement generation probability for an elementary link $$e_{i,j} $$ is equal to:
+
+$$
+P_e = \frac{1}{2} \nu^o \left( p e^{-\frac{d_{i,j}}{2L_0}} \right)^2 = \frac{1}{2} \nu^o p^2 e^{-\frac{d_{i,j}}{L_0}}
+$$
+
+>  where $$\nu^o$$ denotes the optical BSM efficiency (assumed constant at each node, $$\nu^o=0.39$$), $$d_{i,j}$$ denotes the length of elementary link $$e_{i,j}$$, $$L_0$$￼denotes the attenuation length of the optical fiber ($$L_0 = 22 \, \mathrm{km}$$), and the term $$\frac{1}{2}$$ accounts for the optical BSM capability of unambiguously identifying only two out of four bell states
 
 - 양자 메모리 효율 $$\eta_m$$
   - 저장 시간에 따라 감소
     - {% cite Ortu2022a %}에서 설명된 Mims 모델에 따름
   - 이는 얽힘 교환 성공 확률 $$P_s$$에 주요 영향을 미침
+
+> Quantum Memory Efficiency Model
+
+> The efficiency of a quantum memory, denoted as $$\eta_m(t)$$ (the probability that the qubit remains in its original state at time $$t$$), can be expressed as:
+
+$$
+\eta_m(t) = \eta_m(0) \cdot e^{-\frac{t}{T_m}}
+$$
+
+> where $$\eta_m(0)$$ represents the probability that the qubit remains in its original state at time $$t=0$$. Typically, $$\eta_m(0)=1$$ for ideal systems but may be less than 1 in practical cases due to initialization imperfections. $$t$$ is the time for which the qubit is stored in the quantum memory. $$T_m$$ indicates the characteristic memory lifetime or decoherence time, representing the time scale over which the memory retains its original state.
+
+- $$T_m$$ (양자 메모리 수명)의 일반적인 값
+  - 물리적 시스템별
+    - 원자 집합(Atomic Ensembles): 수백 밀리초 ~ 몇 초
+    - 이온 트랩(Ion Traps): 진공 상태에서 1초 ~ 100초
+    - 고체 상태 양자 메모리(Solid-State Quantum Memory):
+      - 희토류 이온: 1~10밀리초
+      - NV 센터: 최대 수백 밀리초
+    - 초전도 큐비트(Superconducting Qubits): 10~500마이크로초
+
+  - $$T_m$$에 영향을 미치는 요인
+    - 환경 잡음: $$T_m$$ 감소
+    - 온도: 극저온 조건에서 $$T_m$$ 증가
+    - 오류 보정: 다이나믹 디커플링(Dynamic Decoupling) 등의 기술로 $$T_m$$ 연장 가능
+
+  - 양자 네트워크 설계 목표
+    - 실용적인 양자 네트워크에서는 최소 $$T_m$$이 1~10초 이상 필요
+
 
 ### 4. 강화학습 기반 문제 해결 접근 방법
 
@@ -252,7 +293,7 @@ toc:
    - 본 연구에서는 **Deep Q-Network(DQN)** 알고리즘을 기반으로 `가상 링크 생성 문제`에 적합하도록 학습 루틴을 구성
    - 학습 루틴은 기존의 DQN 방식을 따르면서도 본 연구 문제에 맞게 조정됨
 
-## 실험 결과
+## Experimental Results
 
 ### 1. 실험 세팅
 
@@ -287,7 +328,7 @@ toc:
 - Benchmark 1: **Inf-cutoff-time policy**
   - 컷오프 시간 무한대 설정
   - 즉, 첫 번째 기본 링크가 성공적으로 생성되면, 두 번째 기본 링크가 성공할 때까지 첫 번째 링크를 계속 유지
-	-	`디코히어런스(decoherence)`로 인해 첫 번째 링크의 상태가 저하되더라도 폐기하지 않고 그대로 사용
+	-	`열화(decoherence)`로 인해 첫 번째 링크의 상태가 저하되더라도 폐기하지 않고 그대로 사용
   - 이 방법은 최적 정책 성능의 하한선으로 활용됨
   - 장점
     - 첫 번째 링크를 폐기하지 않고 유지하므로, 재생성에 따른 추가 비용과 시간을 절약
