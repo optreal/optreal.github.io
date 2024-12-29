@@ -64,9 +64,9 @@ toc:
     - 예) B는 A-B와 B-C의 기본 링크를 양자 메모리에 저장 후 사용
 
 ### 5. **양자 메모리 수명(Quantum Memory Lifetimes)**
-- 양자 메모리에 저장된 얽힘 상태가 원래 상태를 유지할 확률(**메모리 효율(memory efficiency), $$\eta_m$$**)은 시간이 지남에 따라 감소
+- 양자 메모리에 저장된 얽힘 상태가 원래 상태를 유지할 확률(**메모리 효율(memory efficiency), $$\eta$$**)은 시간이 지남에 따라 감소
   - 이 과정은 **데코히어런스(Decoherence)**로 알려짐.
-  - `얽힘 교환` 성공 확률(**$$P_s$$**)은 가장 오래된 양자 메모리의 메모리 효율 $$\eta_m$$에 의존
+  - `얽힘 교환` 성공 확률(**$$P_s$$**)은 가장 오래된 양자 메모리의 메모리 효율 $$\eta$$에 의존
 
 ### 6. 본 연구의 기여
 - 양자 가상 링크 생성 과정을 **고전적 MDP(Classical MDP)**로 모델링하고, DRL 알고리즘을 사용하여 최적의 생성 정책(policy)을 도출
@@ -76,8 +76,8 @@ toc:
 
 | **심볼** | **설명** | **비고** |
 | $$P_e$$ | 두 노드 간 얽힘 성공 확률 |   |
-| $$\eta_m$$ | 양자 메모리 효율 | 양자 메모리에 저장된 얽힘 상태가 원래 상태를 유지할 확률 (저장 시간에 따라 감소, Mims 모델 따름 {% cite Ortu2022a %})  |
-| $$P_s$$ | `얽힘 교환` 성공 확률 |  가장 오래된 양자 메모리의 메모리 효율, 즉, $$\eta_m$$에 의존 |
+| $$\eta$$ | 양자 메모리 효율 | 양자 메모리에 저장된 얽힘 상태가 원래 상태를 유지할 확률 (저장 시간에 따라 감소, Mims 모델 따름 {% cite Ortu2022a %})  |
+| $$P_s$$ | `얽힘 교환` 성공 확률 |  가장 오래된 양자 메모리의 메모리 효율, 즉, $$\eta$$에 의존 |
 | $$t_c$$ | 컷오프 시간 |  |
 {:.mbtablestyle .table .table-striped}
 
@@ -153,7 +153,7 @@ toc:
 - 컷오프 시간 결정의 어려움
 	- 얽힘 생성 성공 확률($$P_e$$)와 `얽힘 교환` 성공 확률($$P_s$$)은 다양한 환경적 요인(예: 광섬유 길이, 양자 메모리 특성)에 따라 변화
 	- 최적의 컷오프 시간을 설정하려면 다음을 고려해야 함
-	  - 얽힘 상태의 품질 변화 속도(`디코히어런스` 영향)
+	  - 얽힘 상태의 품질 변화 속도(`열화(decoherence)` 영향)
 	  - 새로운 얽힘 생성의 성공 확률 및 소요 시간
 	  - 전체 가상 링크 생성률을 극대화하는 시간-성능 균형
  
@@ -207,7 +207,7 @@ toc:
     - 양자 얽힘 생성 과정에서 성공 여부를 실시간으로 확인할 수 있음
   - 얽힘 생성 시각과 컷오프 시간 $$t_c$$와의 연관
     - `신호(herald)` 방식에 의해 컷오프 시간 $$t_c$$를 정밀하게 측정하여 얽힘 품질 관리에 활용
-      - 얽힘 생성 시점부터 시간이 경과함에 따라 얽힘 상태는 `디코히어런스(decoherence)`로 인해 품질이 저하되므로, 컷오프 시간 $$t_c$$이 네트워크 효율 관리에 중요함
+      - 얽힘 생성 시점부터 시간이 경과함에 따라 얽힘 상태는 `열화(decoherence)`로 인해 품질이 저하되므로, 컷오프 시간 $$t_c$$이 네트워크 효율 관리에 중요함
   - 얽힘 상태 저장
     - 생성된 얽힘은 **양자 메모리**에 저장되며, 가상 링크 생성을 위해 얽힘 교환에 사용됨
   - 얽힘 생성 방식으로 **DLCZ 기반 프로토콜** 사용
@@ -235,20 +235,20 @@ $$
 
 >  where $$\nu^o$$ denotes the optical BSM efficiency (assumed constant at each node, $$\nu^o=0.39$$), $$d_{i,j}$$ denotes the length of elementary link $$e_{i,j}$$, $$L_0$$￼denotes the attenuation length of the optical fiber ($$L_0 = 22 \, \mathrm{km}$$), and the term $$\frac{1}{2}$$ accounts for the optical BSM capability of unambiguously identifying only two out of four bell states
 
-- 양자 메모리 효율 $$\eta_m$$
+- 양자 메모리 효율 $$\eta$$
   - 저장 시간에 따라 감소
     - {% cite Ortu2022a %}에서 설명된 Mims 모델에 따름
   - 이는 얽힘 교환 성공 확률 $$P_s$$에 주요 영향을 미침
 
 > Quantum Memory Efficiency Model
 
-> The efficiency of a quantum memory, denoted as $$\eta_m(t)$$ (the probability that the qubit remains in its original state at time $$t$$), can be expressed as:
+> The efficiency of a quantum memory, denoted as $$\eta(t)$$ (the probability that the qubit remains in its original state at time $$t$$), can be expressed as:
 
 $$
-\eta_m(t) = \eta_m(0) \cdot e^{-\frac{t}{T_m}}
+\eta(t) = \eta(0) \cdot e^{-\frac{t}{T_m}}
 $$
 
-> where $$\eta_m(0)$$ represents the probability that the qubit remains in its original state at time $$t=0$$. Typically, $$\eta_m(0)=1$$ for ideal systems but may be less than 1 in practical cases due to initialization imperfections. $$t$$ is the time for which the qubit is stored in the quantum memory. $$T_m$$ indicates the characteristic memory lifetime or decoherence time, representing the time scale over which the memory retains its original state.
+> where $$\eta(0)$$ represents the probability that the qubit remains in its original state at time $$t=0$$. Typically, $$\eta(0)=1$$ for ideal systems but may be less than 1 in practical cases due to initialization imperfections. $$t$$ is the time for which the qubit is stored in the quantum memory. $$T_m$$ indicates the characteristic memory lifetime or decoherence time, representing the time scale over which the memory retains its original state.
 
 - $$T_m$$ (양자 메모리 수명)의 일반적인 값
   - 물리적 시스템별
@@ -271,7 +271,7 @@ $$
 ### 4. 강화학습 기반 문제 해결 접근 방법
 
 - 확률 모델의 부재
-   - 기본 링크 생성 확률 $$P_e$$와 메모리 효율 $$\eta_m$$ (따라서, 얽힘 교환 성공 확률 $$P_s$$)에 대한 정확한 모델을 알 수 없음
+   - 기본 링크 생성 확률 $$P_e$$와 메모리 효율 $$\eta$$ (따라서, 얽힘 교환 성공 확률 $$P_s$$)에 대한 정확한 모델을 알 수 없음
    - 따라서, 당연히 상태 전이 확률 $$p(s_t, a_t, s_{t+1})$$도 알 수 없음
 
 - 깊은 강화학습(DRL)의 적용
