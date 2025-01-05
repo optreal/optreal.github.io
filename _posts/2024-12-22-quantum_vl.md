@@ -53,7 +53,7 @@ toc:
 
 - 얽힘 상태 설정:
   - 두 인접 노드에 위치한 양자 비트 간 얽힘은 **기본 링크(elementary link)**를 구성.
-  - 두 노드 간 얽힘 성공 확률($$P_e$$)은 거리 증가에 따라 지수적으로 감소
+  - 두 노드 간 얽힘 성공 확률($$P_{e_{i,j}}$$)은 거리 증가에 따라 지수적으로 감소
     - Short-distance entanglements (like A-B, in Fig. 1) are more likely to succeed than long-distance entanglements (like A-C, in Fig. 1)
 
 - **가상 링크(Virtual Link)** 생성:
@@ -75,7 +75,7 @@ toc:
 
 
 | **심볼** | **설명** | **비고** |
-| $$P_e$$ | 두 노드 간 얽힘 성공 확률 |   |
+| $$P_{e_{i,j}}$$ | 두 노드 간 얽힘 성공 확률 |   |
 | $$\eta$$ | 양자 메모리 효율 | 양자 메모리에 저장된 얽힘 상태가 원래 상태를 유지할 확률 (저장 시간에 따라 감소, Mims 모델 따름 {% cite Ortu2022a %})  |
 | $$P_s$$ | `얽힘 교환` 성공 확률 |  가장 오래된 양자 메모리의 메모리 효율, 즉, $$\eta$$에 의존 |
 | $$t_c$$ | 컷오프 시간 |  |
@@ -151,7 +151,7 @@ toc:
 {:.mbtablestyle .table .table-striped}
 
 - 컷오프 시간 결정의 어려움
-	- 얽힘 생성 성공 확률($$P_e$$)와 `얽힘 교환` 성공 확률($$P_s$$)은 다양한 환경적 요인(예: 광섬유 길이, 양자 메모리 특성)에 따라 변화
+	- 얽힘 생성 성공 확률($$P_{e_{i,j}}$$)와 `얽힘 교환` 성공 확률($$P_s$$)은 다양한 환경적 요인(예: 광섬유 길이, 양자 메모리 특성)에 따라 변화
 	- 최적의 컷오프 시간을 설정하려면 다음을 고려해야 함
 	  - 얽힘 상태의 품질 변화 속도(`열화(decoherence)` 영향)
 	  - 새로운 얽힘 생성의 성공 확률 및 소요 시간
@@ -181,7 +181,7 @@ toc:
   - 각 기본 또는 가상 링크에 대해 다음 두 가지 행동 중 하나 선택:  
     1. **재설정(reset):**  
        - 링크 생성 재시도  
-       - 확률 $$P_e$$ 및 $$P_s$$에 따라 확률적 전환 유발
+       - 확률 $$P_{e_{i,j}}$$ 및 $$P_s$$에 따라 확률적 전환 유발
        - 해당 링크 상태 $$s$$에 대해
           - $$x$$가 1 또는 0으로 변경
           - $$x=1$$이라면 $$m$$은 0으로 변경  
@@ -221,7 +221,7 @@ toc:
     - $$v$$: 광섬유에서 빛의 전파 속도
   - 슬롯 길이는 새로운 상태를 관찰하고 링크 생성을 재시도하는데 요구되는 시간보다는 길어야 함
 
-- 기본 링크 얽힘 성공 확률 $$P_e$$
+- 기본 링크 얽힘 성공 확률 $$P_{e_{i,j}}$$
   - 광섬유 거리 $$L_0$$에 따라 지수적으로 감소
     - {% cite sangouard2009 %}, {% cite 8269080 %} 또는 {%cite Uphoff_2016 %}에 제시된 결과에 기반함
 
@@ -230,10 +230,10 @@ toc:
 > Once a heralded local entanglement is generated at each node, the two photons must be sent to the BSM and must be measured The entanglement generation probability for an elementary link $$e_{i,j} $$ is equal to:
 
 $$
-P_e = \frac{1}{2} \nu^o \left( p e^{-\frac{d_{i,j}}{2L_0}} \right)^2 = \frac{1}{2} \nu^o p^2 e^{-\frac{d_{i,j}}{L_0}}
+P_{e_{i,j}} = \frac{1}{2} \nu^o \left( p e^{-\frac{d_{i,j}}{2L_0}} \right)^2 = \frac{1}{2} \nu^o p^2 e^{-\frac{d_{i,j}}{L_0}}
 $$
 
->  where $$\nu^o$$ denotes the optical BSM efficiency (assumed constant at each node, $$\nu^o=0.39$$), $$d_{i,j}$$ denotes the length of elementary link $$e_{i,j}$$, $$L_0$$￼denotes the attenuation length of the optical fiber ($$L_0 = 22 \, \mathrm{km}$$), and the term $$\frac{1}{2}$$ accounts for the optical BSM capability of unambiguously identifying only two out of four bell states
+>  where $$\nu^o$$ denotes the optical BSM efficiency (assumed constant at each node, $$\nu^o=0.39$$), $$d_{i,j}$$ denotes the length of elementary link $$e_{i,j}$$, $$p$$ indicates the success probability of detecting a pair of photons during the entanglement generation process ($$p≈0.05\sim0.1$$), $$L_0$$￼denotes the attenuation length of the optical fiber ($$L_0 = 22 \, \mathrm{km}$$), and the term $$\frac{1}{2}$$ accounts for the optical BSM capability of unambiguously identifying only two out of four bell states
 
 - 양자 메모리 효율 $$\eta$$
   - 저장 시간에 따라 감소
@@ -245,12 +245,12 @@ $$
 > The efficiency of a quantum memory, denoted as $$\eta(t)$$ (the probability that the qubit remains in its original state at time $$t$$), can be expressed as:
 
 $$
-\eta(t) = \eta(0) \cdot e^{-\frac{t}{T_m}}
+\eta(t) = \eta(0) \cdot e^{-\frac{t}{T_o}}
 $$
 
-> where $$\eta(0)$$ represents the probability that the qubit remains in its original state at time $$t=0$$. Typically, $$\eta(0)=1$$ for ideal systems but may be less than 1 in practical cases due to initialization imperfections. $$t$$ is the time for which the qubit is stored in the quantum memory. $$T_m$$ indicates the characteristic memory lifetime or decoherence time, representing the time scale over which the memory retains its original state.
+> where $$\eta(0)$$ represents the probability that the qubit remains in its original state at time $$t=0$$. Typically, $$\eta(0)=1$$ for ideal systems but may be less than 1 in practical cases due to initialization imperfections. $$t$$ is the time for which the qubit is stored in the quantum memory. $$T_o$$ indicates the characteristic memory lifetime or decoherence time, representing the time scale over which the memory retains its original state.
 
-- $$T_m$$ (양자 메모리 수명)의 일반적인 값
+- $$T_o$$ (양자 메모리 수명)의 일반적인 값
   - 물리적 시스템별
     - 원자 집합(Atomic Ensembles): 수백 밀리초 ~ 몇 초
     - 이온 트랩(Ion Traps): 진공 상태에서 1초 ~ 100초
@@ -259,19 +259,25 @@ $$
       - NV 센터: 최대 수백 밀리초
     - 초전도 큐비트(Superconducting Qubits): 10~500마이크로초
 
-  - $$T_m$$에 영향을 미치는 요인
-    - 환경 잡음: $$T_m$$ 감소
-    - 온도: 극저온 조건에서 $$T_m$$ 증가
-    - 오류 보정: 다이나믹 디커플링(Dynamic Decoupling) 등의 기술로 $$T_m$$ 연장 가능
+  - $$T_o$$에 영향을 미치는 요인
+    - 환경 잡음: $$T_o$$ 감소
+    - 온도: 극저온 조건에서 $$T_o$$ 증가
+    - 오류 보정: 다이나믹 디커플링(Dynamic Decoupling) 등의 기술로 $$T_o$$ 연장 가능
 
   - 양자 네트워크 설계 목표
-    - 실용적인 양자 네트워크에서는 최소 $$T_m$$이 1~10초 이상 필요
+    - 실용적인 양자 네트워크에서는 최소 $$T_o$$이 1~10초 이상 필요
 
+- 교환 성공 확률 $$P_s$$
+  - 얽힘 교환 과정에서 가장 오래된 메모리의 효율 $$\eta(t)$$ 에 따라 결정
+
+$$
+P_s = \eta(t_{oldest}) = \eta(0) \cdot e^{-\frac{t_{oldest}}{T_o}}
+$$
 
 ### 4. 강화학습 기반 문제 해결 접근 방법
 
 - 확률 모델의 부재
-   - 기본 링크 생성 확률 $$P_e$$와 메모리 효율 $$\eta$$ (따라서, 얽힘 교환 성공 확률 $$P_s$$)에 대한 정확한 모델을 알 수 없음
+   - 기본 링크 생성 확률 $$P_{e_{i,j}}$$와 메모리 효율 $$\eta$$ (따라서, 얽힘 교환 성공 확률 $$P_s$$)에 대한 정확한 모델을 알 수 없음
    - 따라서, 당연히 상태 전이 확률 $$p(s_t, a_t, s_{t+1})$$도 알 수 없음
 
 - 깊은 강화학습(DRL)의 적용
