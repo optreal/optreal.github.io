@@ -2,7 +2,7 @@
 layout: post
 title: "Imitation Learning (모방 학습)"
 description: "Imitation Learning (모방 학습)"
-date: 2025-1-29 00:00:00
+date: 2025-1-28 00:00:00
 tags: Imitation Learning, Reinforcement Learning
 categories: RL
 tabs: true
