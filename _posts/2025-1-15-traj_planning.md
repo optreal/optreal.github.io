@@ -3,7 +3,7 @@ layout: post
 title: "Enhancing Safety via Deep Reinforcement Learning in Trajectory Planning for Agile Flights in Unknown Environments"
 description: "Enhancing Safety via Deep Reinforcement Learning in Trajectory Planning for Agile Flights in Unknown Environments"
 date: 2025-1-14 00:00:00
-tags: Trajectory-Planning, Reinforcement-Learning
+tags: Trajectory-Planning, Reinforcement Learning
 categories: Drone
 tabs: true
 toc:

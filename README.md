@@ -1,3 +1,9 @@
+################################
+rm -rf Gemfile.lock
+bundle install
+bundle exec jekyll serve
+################################
+
 # al-folio
 
 <div align="center">
