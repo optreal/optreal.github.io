@@ -3,7 +3,7 @@ layout: post
 title: "Offline RL vs. Offline IL"
 description: "Offline RL vs. Offline IL"
 date: 2025-1-29 00:00:00
-tags: Imitation Learning, Reinforcement Learning
+tags: Imitation Learning, Offline Learning, Reinforcement Learning
 categories: RL
 tabs: true
 related_publications: false
