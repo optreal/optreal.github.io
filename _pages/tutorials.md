@@ -5,7 +5,7 @@ permalink: /tutorials/
 description: A growing collection of tutorials.
 nav: true
 nav_order: 2
-display_categories: [TorchRL, RL]
+display_categories: [Torch RL, Offline RL]
 horizontal: false
 ---
 <style>
